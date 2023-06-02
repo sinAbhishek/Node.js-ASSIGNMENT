@@ -5,10 +5,14 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
+import ClipLoader from "react-spinners/ClipLoader";
 import "./page.css";
+
 const Page = () => {
   const [data, setdata] = useState([]);
   const [dark, setdark] = React.useState(true);
+  const [loading, setloading] = useState(false);
+  let [color, setColor] = useState("#ffffff");
   const darkTheme = createTheme({
     palette: {
       mode: dark ? "dark" : "light",
@@ -25,6 +29,12 @@ const Page = () => {
   const test = () => {
     console.log(dark);
   };
+  useEffect(() => {
+    const call = () => {
+      setloading(true);
+    };
+    data[0] && call();
+  }, [data]);
   const MaterialUISwitch = styled(Switch)(({ theme }) => ({
     width: 62,
     height: 34,
@@ -139,42 +149,48 @@ const Page = () => {
             <p className=" text-xl text-slate-500 ">7 Days</p>
           </div>
         </div>
-        <div className="bot flex justify-center h-max mx-8 px-4">
-          <table className=" w-full h-full border-separate border-spacing-x-0 border-spacing-y-4 ">
-            <thead className="text-xl md:text-2xl text-slate-500 font-semibold">
-              <tr>
-                <th>#</th>
-                <th>Platform</th>
-                <th>Last Traded Price</th>
-                <th>Buy / Sell Price</th>
-                <th>Volume</th>
-                <th>Base_Unit</th>
-              </tr>
-            </thead>
-            <tbody className="w-screen text-xl  md:text-2xl text-white font-semibold text-center bg-slate-600 ">
-              {data[0] &&
-                data.map((c, i) => (
-                  <tr className=" w-full">
-                    <td
-                      style={{ borderRadius: "1rem 0rem 0rem 1rem" }}
-                      className=" mt-12 w-2"
-                    >
-                      {i + 1}
-                    </td>
-                    <td>{c.name}</td>
-                    <td>{c.last}</td>
-                    <td>
-                      ₹{c.buy}/₹{c.sell}
-                    </td>
-                    <td>{c.volume}</td>
-                    <td style={{ borderRadius: "0rem 1rem 1rem 0rem" }}>
-                      {c.base_unit}
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
-        </div>
+        {loading ? (
+          <div className="bot flex justify-center h-max mx-8 px-4">
+            <table className=" w-full h-full border-separate border-spacing-x-0 border-spacing-y-4 ">
+              <thead className="text-xl md:text-2xl text-slate-500 font-semibold">
+                <tr>
+                  <th>#</th>
+                  <th>Platform</th>
+                  <th>Last Traded Price</th>
+                  <th>Buy / Sell Price</th>
+                  <th>Volume</th>
+                  <th>Base_Unit</th>
+                </tr>
+              </thead>
+              <tbody className="w-screen text-xl  md:text-2xl text-white font-semibold text-center bg-slate-600 ">
+                {data[0] &&
+                  data.map((c, i) => (
+                    <tr className=" w-full">
+                      <td
+                        style={{ borderRadius: "1rem 0rem 0rem 1rem" }}
+                        className=" mt-12 w-2"
+                      >
+                        {i + 1}
+                      </td>
+                      <td>{c.name}</td>
+                      <td>{c.last}</td>
+                      <td>
+                        ₹{c.buy}/₹{c.sell}
+                      </td>
+                      <td>{c.volume}</td>
+                      <td style={{ borderRadius: "0rem 1rem 1rem 0rem" }}>
+                        {c.base_unit}
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="w-full h-48 flex justify-center items-center">
+            Loading... please wait(max wait time 30s)
+          </div>
+        )}
       </div>
     </ThemeProvider>
   );
